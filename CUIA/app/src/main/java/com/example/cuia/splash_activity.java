@@ -9,10 +9,12 @@ import android.content.pm.ActivityInfo;
 import android.os.Handler;
 
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 public class splash_activity extends Activity {
 
-    private final int DURACION_SPLASH = 3000;
+    private final int DURACION_SPLASH = 200;
+    private ProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,15 +23,38 @@ public class splash_activity extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_splash_activity);
+        mProgress = (ProgressBar) findViewById(R.id.progressBar);
 
-        new Handler().postDelayed(new Runnable() {
+        new Thread(new Runnable() {
+            @Override
             public void run() {
-                Intent intent = new Intent(splash_activity.this, MainActivity.class);
-                startActivity(intent);
+                doWork();
+                startApp();
                 finish();
             }
+        }).start();
 
-            ;
-        }, DURACION_SPLASH);
     }
-}
+
+    private void doWork() {
+        for (int i = 0; i < 100; i += 10) {
+
+            try {
+                Thread.sleep(DURACION_SPLASH);
+                mProgress.setProgress(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void startApp() {
+        Intent intent = new Intent(splash_activity.this, menu.class);
+        startActivity(intent);
+
+    }
+
+
+
+        }
