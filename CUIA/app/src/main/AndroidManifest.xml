@@ -33,9 +33,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Configuracion"
-            android:label="Configuración"></activity>
+            android:label="Configuración"
+            android:parentActivityName=".menu"></activity>
         <activity android:name=".menu" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:parentActivityName=".menu"/>
         <activity android:name=".splash_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,6 +1,8 @@
 
 package com.example.cuia;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -12,6 +14,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -19,19 +22,33 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.imgproc.Imgproc;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.view.SurfaceView;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements OnTouchListener, CvCameraViewListener2 {
-    private static final String  TAG              = "OCVSample::Activity";
+public class MainActivity extends AppCompatActivity implements OnTouchListener, CvCameraViewListener2, CompoundButton.OnCheckedChangeListener {
+    private static final String  TAG= "OCVSample::Activity";
 
     private boolean              mIsColorSelected = false;
     private Mat                  mRgba;
@@ -42,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
     private Size                 SPECTRUM_SIZE;
     private Scalar               CONTOUR_COLOR;
     private Mat mRgbaF, mRgbaT;
+
+    private Scalar daltonismo_seleccionado;
+
 
     private CameraBridgeViewBase mOpenCvCameraView;
 
@@ -63,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
         }
     };
 
+    private Switch on_off;
+    private SeekBar barra_seleccion;
+    private boolean blob_detector;
+    private int valor_seek_bar;
+
+
     public MainActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
@@ -76,11 +102,75 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+        }
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.show_camera_activity_java_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        on_off = (Switch) findViewById(R.id.switch2);
+        on_off.setOnCheckedChangeListener(this);
+
+        if(Controller.default_value_daltonismo==2){
+            switch (Controller.default_value_dicromatismo){
+                case 0:
+                    daltonismo_seleccionado = new Scalar(0,255,255);
+                    break;
+                case 1:
+                    daltonismo_seleccionado = new Scalar(255,0,255);
+                    break;
+                case 2:
+                    daltonismo_seleccionado = new Scalar(255,255,0);
+                    break;
+            }
+        }
+
+        else if(Controller.default_value_daltonismo==1){
+            switch (Controller.default_value_monocromatismo){
+                case 0:
+                    daltonismo_seleccionado = new Scalar(255,0,0);
+                    break;
+                case 1:
+                    daltonismo_seleccionado = new Scalar(0,255,0);
+                    break;
+                case 2:
+                    daltonismo_seleccionado = new Scalar(0,0,255);
+                    break;
+            }
+        }
+
+
+        barra_seleccion = (SeekBar) findViewById(R.id.seekBar) ;
+        barra_seleccion.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                valor_seek_bar = progress;
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(getBaseContext(),"Modificando grado ..",Toast.LENGTH_LONG);
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+               Toast texto =  Toast.makeText(getBaseContext(),"Grado "+valor_seek_bar+" / "+ seekBar.getMax(),Toast.LENGTH_SHORT);
+                texto.setGravity(Gravity.BOTTOM, 0, 430);
+                texto.show();
+
+            }
+        });
+
+
     }
+
+
 
     @Override
     public void onPause()
@@ -89,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
+
+
 
     @Override
     public void onResume()
@@ -182,27 +274,64 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
-        Mat canny = new Mat();
-        /*
+
+
+        if(blob_detector){
         if (mIsColorSelected) {
             mDetector.process(mRgba);
             List<MatOfPoint> contours = mDetector.getContours();
             Log.e(TAG, "Contours count: " + contours.size());
-            Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
+            Imgproc.drawContours(mRgba, contours, -1, daltonismo_seleccionado,-1);
+
+            //Imgproc.fillPoly(mRgba,contours,tipo_dicromatismo);
 
             Mat colorLabel = mRgba.submat(4, 68, 4, 68);
             colorLabel.setTo(mBlobColorRgba);
 
-            Mat spectrumLabel = mRgba.submat(4, 4 + mSpectrum.rows(), 70, 70 + mSpectrum.cols());
-            mSpectrum.copyTo(spectrumLabel);
-        }*/
 
-        Imgproc.Canny(mRgba,canny,10,100);
-        Core.transpose(canny,mRgbaF);
-        Imgproc.resize(mRgbaF, mRgbaT,canny.size(),0,0,0);
-        Core.flip(mRgbaT,canny,1);
+        }}
 
-        return canny;
+        /*Mat mask1 = inputFrame.rgba();
+        Mat output= inputFrame.rgba();
+
+        if(blob_detector) {
+            //Imgproc.cvtColor(mRgba, canny, Imgproc.COLOR_BGR2HSV);
+            //Core.inRange(canny, new Scalar(110, 50, 50), new Scalar(130, 255, 255), mask1);
+
+            //Core.inRange(canny, new Scalar(45, 20, 10), new Scalar(75, 255, 255), mask2);
+
+            //Core.add(mask1,mask2,canny);
+
+            Mat gaussian_output = new Mat();
+
+            Imgproc.Canny(inputFrame.gray(), mask1, 80, 100);
+            Imgproc.cvtColor(mask1, mRgba, Imgproc.COLOR_GRAY2RGBA, 4);
+            //Imgproc.GaussianBlur(mask1, gaussian_output, new Size(5, 5), 5);
+
+            List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+            Mat gray = new Mat();
+            Imgproc.cvtColor(output, gray, Imgproc.COLOR_RGBA2GRAY);
+            Imgproc.findContours(gray, contours, new Mat(), Imgproc.RETR_EXTERNAL,
+                    Imgproc.CHAIN_APPROX_SIMPLE);
+            //System.out.println(contours.size());
+            //output = new Mat(gaussian_output.size(),CvType.CV_8UC3);
+            //Imgproc.cvtColor(gray,output,Imgproc.COLOR_GRAY2RGBA,4);
+
+            Imgproc.drawContours(output, contours, -1, new Scalar(255, 0, 0), -1);
+
+
+
+
+        }
+        */
+
+
+        //Imgproc.Canny(mRgba,canny,10,100);
+        Core.transpose(mRgba,mRgbaF);
+        Imgproc.resize(mRgbaF, mRgbaT,mRgba.size(),0,0,0);
+        Core.flip(mRgbaT,mRgba,1);
+
+        return mRgba;
     }
 
     private Scalar converScalarHsv2Rgba(Scalar hsvColor) {
@@ -211,5 +340,15 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
         Imgproc.cvtColor(pointMatHsv, pointMatRgba, Imgproc.COLOR_HSV2RGB_FULL, 4);
 
         return new Scalar(pointMatRgba.get(0, 0));
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(on_off.isChecked())
+            blob_detector=true;
+        else
+            blob_detector=false;
+            mIsColorSelected=false;
+
     }
 }

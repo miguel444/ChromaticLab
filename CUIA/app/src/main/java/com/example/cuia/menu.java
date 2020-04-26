@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -46,17 +47,21 @@ public class menu extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId()){
 
             case R.id.button:
-                Toast texto_iniciar = Toast.makeText(getBaseContext(),"Iniciando cámara ...",Toast.LENGTH_LONG);
+                Toast texto_iniciar = Toast.makeText(getBaseContext(),"Iniciando cámara ...",Toast.LENGTH_SHORT);
                 startActivity(new Intent(menu.this, MainActivity.class));
+                texto_iniciar.setGravity(Gravity.BOTTOM, 0, 430);
                 texto_iniciar.show();
+                break;
 
             case R.id.button3:
                 Toast texto_config = Toast.makeText(getBaseContext(),"Configuración",Toast.LENGTH_SHORT);
                 startActivity(new Intent(menu.this, Configuracion.class));
                 texto_config.show();
+                break;
 
             case R.id.button4:
                 System.exit(0);
+                break;
 
         }
     }

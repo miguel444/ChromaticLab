@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FBFAFD"
     tools:context=".MainActivity">
 
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/show_camera_activity_java_surface_view"
-        android:layout_width="match_parent"
+        android:layout_width="428dp"
 
-        android:layout_height="match_parent"
-        app:show_fps="true" />
+        android:layout_height="459dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:show_fps="true"
+        tools:ignore="MissingConstraints" />
 
-</RelativeLayout>
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="333dp"
+        android:layout_height="34dp"
+        android:layout_marginBottom="32dp"
+        android:checked="false"
+        android:fontFamily="casual"
+        android:text="Vista Normal/Blob Detector"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="343dp"
+        android:layout_height="94dp"
+        app:layout_constraintBottom_toTopOf="@+id/switch2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
