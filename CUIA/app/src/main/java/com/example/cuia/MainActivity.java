@@ -47,7 +47,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements OnTouchListener, CvCameraViewListener2, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements  CvCameraViewListener2, CompoundButton.OnCheckedChangeListener {
     private static final String  TAG= "OCVSample::Activity";
 
     private boolean              mIsColorSelected = false;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-                    mOpenCvCameraView.setOnTouchListener(MainActivity.this);
+
                 } break;
                 default:
                 {
@@ -119,12 +119,22 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
             switch (Controller.default_value_dicromatismo){
                 case 0:
                     daltonismo_seleccionado = new Scalar(0,255,255);
+                    ColorBlobDetector.mLowerBound = new Scalar(0,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(10,255,255);
+
+                    ColorBlobDetector.cotaRojoClaro = new Scalar(220,50,50);
+                    ColorBlobDetector.cotaRojoOscuro = new Scalar(256,255,255);
                     break;
                 case 1:
-                    daltonismo_seleccionado = new Scalar(255,0,255);
+                    daltonismo_seleccionado = new Scalar(255,255,0);
+                    ColorBlobDetector.mLowerBound = new Scalar(49,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(128,255,255);
+
                     break;
                 case 2:
-                    daltonismo_seleccionado = new Scalar(255,255,0);
+                    daltonismo_seleccionado = new Scalar(255,0,255);
+                    ColorBlobDetector.mLowerBound = new Scalar(120,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(190,255,255);
                     break;
             }
         }
@@ -133,14 +143,31 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
             switch (Controller.default_value_monocromatismo){
                 case 0:
                     daltonismo_seleccionado = new Scalar(255,0,0);
+                    ColorBlobDetector.mLowerBound = new Scalar(30,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(210,255,255);
                     break;
                 case 1:
                     daltonismo_seleccionado = new Scalar(0,255,0);
+                    ColorBlobDetector.mLowerBound = new Scalar(0,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(45,255,255);
+                    ColorBlobDetector.cotaRojoClaro = new Scalar(138,50,50);
+                    ColorBlobDetector.cotaRojoOscuro = new Scalar(255,255,255);
                     break;
                 case 2:
                     daltonismo_seleccionado = new Scalar(0,0,255);
+                    ColorBlobDetector.mLowerBound = new Scalar(0,50,50);
+                    ColorBlobDetector.mUpperBound = new Scalar(110,255,255);
+                    ColorBlobDetector.cotaRojoClaro = new Scalar(200,50,50);
+                    ColorBlobDetector.cotaRojoOscuro = new Scalar(255,255,255);
                     break;
             }
+        }
+
+        else {
+            daltonismo_seleccionado = new Scalar(0,0,0);
+            ColorBlobDetector.mLowerBound = new Scalar(0,50,50);
+            ColorBlobDetector.mUpperBound = new Scalar(255,255,255);
+
         }
 
 
@@ -221,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
     public void onCameraViewStopped() {
         mRgba.release();
     }
-
+/*
     public boolean onTouch(View v, MotionEvent event) {
         int cols = mRgba.cols();
         int rows = mRgba.rows();
@@ -271,13 +298,12 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
 
         return false; // don't need subsequent touch events
     }
-
+*/
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
 
 
         if(blob_detector){
-        if (mIsColorSelected) {
             mDetector.process(mRgba);
             List<MatOfPoint> contours = mDetector.getContours();
             Log.e(TAG, "Contours count: " + contours.size());
@@ -289,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener, 
             colorLabel.setTo(mBlobColorRgba);
 
 
-        }}
+        }
 
         /*Mat mask1 = inputFrame.rgba();
         Mat output= inputFrame.rgba();

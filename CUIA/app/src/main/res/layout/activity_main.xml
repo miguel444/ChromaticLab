@@ -27,7 +27,7 @@
         android:layout_marginBottom="32dp"
         android:checked="false"
         android:fontFamily="casual"
-        android:text="Vista Normal/Blob Detector"
+        android:text="Vista Normal  /  Vista RA"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -14,8 +14,11 @@ import org.opencv.imgproc.Imgproc;
 
 public class ColorBlobDetector {
     // Lower and Upper bounds for range checking in HSV color space
-    private Scalar mLowerBound = new Scalar(0);
-    private Scalar mUpperBound = new Scalar(0);
+    public static Scalar mLowerBound = new Scalar(49,50,50);
+    public static Scalar mUpperBound = new Scalar(107,255,255);
+
+    public static Scalar cotaRojoClaro = new Scalar(49,50,50);
+    public static Scalar cotaRojoOscuro = new Scalar(107,255,255);
     // Minimum contour area in percent for contours filtering
     private static double mMinContourArea = 0.1;
     // Color radius for range checking in HSV color space
@@ -73,8 +76,17 @@ public class ColorBlobDetector {
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
 
         Imgproc.cvtColor(mPyrDownMat, mHsvMat, Imgproc.COLOR_RGB2HSV_FULL);
+        if ((Controller.default_value_daltonismo==1 || Controller.default_value_dicromatismo==0) && Controller.default_value_daltonismo!=0 && Controller.default_value_monocromatismo!=0){
+            Mat rojo1 = new Mat();
+            Core.inRange(mHsvMat,cotaRojoClaro,cotaRojoOscuro,rojo1);
+            Mat rojo2 = new Mat();
+            Core.inRange(mHsvMat,mLowerBound,mUpperBound,rojo2);
+            Core.bitwise_or(rojo1,rojo2,mMask);
 
-        Core.inRange(mHsvMat, mLowerBound, mUpperBound, mMask);
+        }
+        else
+            Core.inRange(mHsvMat, mLowerBound, mUpperBound, mMask);
+
         Imgproc.dilate(mMask, mDilatedMask, new Mat());
 
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
