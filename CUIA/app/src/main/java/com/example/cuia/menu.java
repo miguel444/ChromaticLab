@@ -10,7 +10,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -37,6 +36,20 @@ public class menu extends AppCompatActivity implements View.OnClickListener {
         salir.setOnClickListener(this);
 
 
+        if(Controller.idioma==1 ){
+            iniciar_camera.setText("Start camera");
+            config.setText("Settings");
+            salir.setText("Exit");
+
+        }
+
+        else{
+            iniciar_camera.setText("Iniciar cámara");
+            config.setText("Configuración");
+            salir.setText("Salir");
+
+
+        }
 
 
 
@@ -69,7 +82,12 @@ public class menu extends AppCompatActivity implements View.OnClickListener {
                 }
 
                 else{
-                    Toast texto_iniciar = Toast.makeText(getBaseContext(),"Iniciando cámara ...",Toast.LENGTH_SHORT);
+                    String text;
+                    if(Controller.idioma==0)
+                        text = "Iniciando cámara ...";
+                    else
+                        text = "Opening camera ...";
+                    Toast texto_iniciar = Toast.makeText(getBaseContext(),text,Toast.LENGTH_SHORT);
                     startActivity(new Intent(menu.this, MainActivity.class));
                     texto_iniciar.setGravity(Gravity.BOTTOM, 0, 430);
                     texto_iniciar.show();
@@ -78,7 +96,12 @@ public class menu extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.button3:
-                Toast texto_config = Toast.makeText(getBaseContext(),"Configuración",Toast.LENGTH_SHORT);
+                String text;
+                if(Controller.idioma==0)
+                    text = "Configuración";
+                else
+                    text = "Settings";
+                Toast texto_config = Toast.makeText(getBaseContext(),text,Toast.LENGTH_SHORT);
                 startActivity(new Intent(menu.this, Configuracion.class));
                 texto_config.show();
                 break;

@@ -54,25 +54,11 @@ public class MatOfPoint extends Mat {
         put(0, 0, buff); //TODO: check ret val!
     }
 
-    public Point[] toArray() {
-        int num = (int) total();
-        Point[] ap = new Point[num];
-        if(num == 0)
-            return ap;
-        int buff[] = new int[num * _channels];
-        get(0, 0, buff); //TODO: check ret val!
-        for(int i=0; i<num; i++)
-            ap[i] = new Point(buff[i*_channels], buff[i*_channels+1]);
-        return ap;
-    }
 
     public void fromList(List<Point> lp) {
         Point ap[] = lp.toArray(new Point[0]);
         fromArray(ap);
     }
 
-    public List<Point> toList() {
-        Point[] ap = toArray();
-        return Arrays.asList(ap);
-    }
+
 }

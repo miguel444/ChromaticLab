@@ -10,38 +10,93 @@
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/show_camera_activity_java_surface_view"
-        android:layout_width="428dp"
+        android:layout_width="match_parent"
 
         android:layout_height="459dp"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:show_fps="true"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <Switch
         android:id="@+id/switch2"
-        android:layout_width="333dp"
-        android:layout_height="34dp"
+        android:layout_width="167dp"
+        android:layout_height="44dp"
         android:layout_marginBottom="32dp"
         android:checked="false"
-        android:fontFamily="casual"
-        android:text="Vista Normal  /  Vista RA"
-        android:textSize="18sp"
+        android:drawableLeft="@drawable/invert"
+        android:drawablePadding="70dip"
+        android:paddingLeft="15dip"
+        android:paddingRight="26dip"
+        android:switchMinWidth="70dp"
+
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
         android:id="@+id/seekBar"
+        style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="343dp"
         android:layout_height="94dp"
-        app:layout_constraintBottom_toTopOf="@+id/switch2"
+        android:layout_marginTop="480dp"
+        android:progressDrawable="@drawable/seek_bar_progress"
+        android:splitTrack="false"
+        android:thumb="@drawable/seek_bar_drawable"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/show_camera_activity_java_surface_view" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="278dp"
+        android:layout_height="36dp"
+        android:drawableLeft="@drawable/flask"
+        android:drawablePadding="6dip"
+        android:fontFamily="@font/bungee"
+        android:gravity="center_horizontal"
+        android:text="Daltonismo"
+        android:textColor="@android:color/white"
+        android:textSize="12dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/show_camera_activity_java_surface_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/show_camera_activity_java_surface_view"
+        app:layout_constraintVertical_bias="0.094" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="480dp"
+        android:text="Grado 100 / 100"
+        android:textSize="14sp"
+        android:fontFamily="@font/cinzel_bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="79dp"
+        android:layout_height="74dp"
+        android:background="#080709"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/show_camera_activity_java_surface_view"
+        app:layout_constraintVertical_bias="0.948"
+        app:srcCompat="@drawable/rotate" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

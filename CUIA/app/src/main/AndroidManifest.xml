@@ -33,11 +33,15 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Configuracion"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             android:label="Configuración"
             android:parentActivityName=".menu"></activity>
         <activity android:name=".menu" />
         <activity android:name=".MainActivity"
-            android:parentActivityName=".menu"/>
+            android:parentActivityName=".menu"
+
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+
         <activity android:name=".splash_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +49,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

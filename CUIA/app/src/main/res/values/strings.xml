@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CUIA</string>
+    <string name="app_name">Chromatic Lab</string>
     <string name="camara">Cámara</string>
     <string name="title_activity_configuracioj">configuracion</string>
 
@@ -17,4 +17,6 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="chromatic_lab">Chromatic <center>Lab</center></string>
+    <string name="vista_normal_vista_ra">Vista Normal / Vista RA</string>
 </resources>
